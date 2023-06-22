@@ -13,7 +13,8 @@ class ImageGallery extends Component {
     isLoading: false,
     error: null,
     page: 1,
-    searchText: ''
+    searchText: '',
+    totalHits: 0 
   };
 
   componentDidMount() {
@@ -50,6 +51,7 @@ class ImageGallery extends Component {
 
       this.setState(prevState => ({
         data: prevState.page === 1 ? data.hits : [...prevState.data, ...data.hits],
+        totalHits: data.totalHits, // Оновлення значення totalHits
         isLoading: false
       }));
 
@@ -78,7 +80,7 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { data, isLoading } = this.state;
+    const { data, isLoading, totalHits } = this.state;
 
     return (
       <>
@@ -94,7 +96,9 @@ class ImageGallery extends Component {
         </ul>
         <div className={css['container-center']}>
           {isLoading && <Loader />}
-          {data.length > 0 && <Button handlePageChange={this.handlePageChange} />}
+          {data.length > 0 && data.length !== totalHits && ( 
+            <Button handlePageChange={this.handlePageChange} />
+          )}
         </div>
       </>
     );
